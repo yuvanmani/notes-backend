@@ -1,0 +1,28 @@
+{
+  "name": "notes-backend",
+  "version": "1.0.0",
+  "description": "Notes Management",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuvanmani/notes-backend.git"
+  },
+  "keywords": [
+    "notes",
+    "fullstack",
+    "reactjs",
+    "nodejs",
+    "expressjs",
+    "mongodb",
+    "mongoose"
+  ],
+  "author": "Manivannan Rajendran",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yuvanmani/notes-backend/issues"
+  },
+  "homepage": "https://github.com/yuvanmani/notes-backend#readme"
+}
