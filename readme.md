@@ -21,3 +21,21 @@ This is a notes management application, developed by using MERN Stack (MongoDB, 
 ## Notes Model
 
 -- content
+-- userId
+
+## End Points
+
+/auth
+    - POST "/register" - Register a new user
+    - POST "/verifyotp" - OTP verification for registering new user
+    - POST "/login" - Login a user
+    - POST "/logout" - Logout a user
+    - GET "/me" - Get user profile
+
+/notes
+    - POST "/new" - Create a new note
+    - GET "/view" - View all notes of particular user
+    - GET "/view/:id" - View one particular note of particular user
+    - PUT "/update/:id" - Update one particular note of particular user
+    - DELETE "/delete/:id" - Delete one particular note of particular user
+   
