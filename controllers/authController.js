@@ -2,6 +2,9 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const { sendEmail } = require("../utils/emailService");
 const validator = require("validator");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../utils/config");
+
 
 const authController = {
     register: async (req, res) => {
@@ -138,7 +141,41 @@ const authController = {
     },
     login: async (req, res) => {
         try {
-            res.status(200).json({ message: "Login okay" });
+            // get details from request body
+            const { email, password } = req.body;
+
+            // validate input
+            if (!email || !password) {
+                return res.status(400).json({ message: "All fields are required" });
+            }
+
+            // check user already exists
+            const user = await User.findOne({ email });
+
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            // check password is correct
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+
+            if (!isPasswordValid) {
+                return res.status(400).json({ message: "Invalid credentials" });
+            }
+
+            // create a JWT token for authorization
+            const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
+
+            // set the token in cookie
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: false,
+                sameSite: "Strict"
+            })
+
+            // send response to the user
+            return res.status(200).json({ message: "Login successful" });
+
         }
         catch (error) {
             return res.status(500).json({ message: "Login failed" });
@@ -146,7 +183,16 @@ const authController = {
     },
     logout: async (req, res) => {
         try {
-            res.status(200).json({ message: "Logout okay" });
+            // clear the cookie
+            res.clearCookie("token", {
+                httpOnly: true,
+                secure: true,
+                sameSite: "Strict"
+            });
+
+            // send response to the user
+            return res.status(200).json({ message: "Logout successful" });
+
         }
         catch (error) {
             return res.status(500).json({ message: "Logout failed" });
@@ -154,7 +200,18 @@ const authController = {
     },
     me: async (req, res) => {
         try {
-            res.status(200).json({ message: "Profile okay" });
+            // get the userId from the request
+            const userId = req.userId;
+
+            // find the user by ID
+            const user = await User.findById(userId).select("-_id -createdAt -updatedAt -password -isVerified -__v");
+
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+
+            // send response to the user
+            return res.status(200).json(user);
         }
         catch (error) {
             return res.status(500).json({ message: "Failed to retrieve user" });
