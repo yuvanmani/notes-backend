@@ -10,7 +10,7 @@ const app = express();
 
 // enable cors to accept request from another domain
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://m-notes-frontend.netlify.app",
     credentials: true
 }))
 
