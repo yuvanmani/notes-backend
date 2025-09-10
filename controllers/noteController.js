@@ -50,7 +50,7 @@ const noteController = {
             const { id } = req.params;
 
             // get note from database
-            const note = await Note.findById(id).select("-__v -createdAt -updatedAt");
+            const note = await Note.findById(id).select("-__v -createdAt -updatedAt -userId");
 
             if (!note) {
                 return res.status(404).json({ message: "Note not found" });
@@ -79,7 +79,7 @@ const noteController = {
             }
 
             // send the updated note in response
-            return res.status(200).json(note);
+            return res.status(200).json({ message: "Note updated successfully" });
         }
         catch (error) {
             return res.status(500).json({ message: "Update note failed" });
